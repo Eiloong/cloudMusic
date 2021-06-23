@@ -38,7 +38,7 @@
       <!-- tab的内容区域 -->
       <div class="tab-content">
         <div class="items">
-          <div class="item" v-for="(item,index) in playlists" :key="index">
+          <div class="item" @click="toPlaylist(item.id)" v-for="(item,index) in playlists" :key="index">
             <div class="img-wrap">
               <div class="num-wrap">
                 播放量:
@@ -115,6 +115,9 @@ export default {
         this.playlists = res.data.playlists
         this.total = res.data.total
       })
+    },
+    toPlaylist(id) {
+      this.$router.push(`/playlist?id=${id}`)
     }
   }
 };

@@ -40,7 +40,8 @@
           <td>{{item.album.artists[0].name}}</td>
           <!-- 专辑 -->
           <td>{{item.album.name}}</td>
-          <td>{{item.duration}}</td>
+          <!-- 时间 -->
+          <td>{{item.duration | formatDuration}}</td>
         </tr>
       </tbody>
     </table>

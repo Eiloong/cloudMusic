@@ -12,7 +12,7 @@
         推荐歌单
       </h3>
       <div class="items">
-        <div class="item" v-for="(item, index) in list" :key="index">
+        <div class="item" @click="toPlaylist(item.id)" v-for="(item, index) in list" :key="index">
           <div class="img-wrap">
             <div class="desc-wrap">
               <span class="desc">{{item.copywriter}}</span>
@@ -30,7 +30,7 @@
         最新音乐
       </h3>
       <div class="items">
-        <div class="item" v-for="(item, index) in songs" :key="index">
+        <div class="item" @dblclick="playMusic(item.id)" v-for="(item, index) in songs" :key="index">
           <div class="img-wrap">
             <img :src="item.picUrl" alt="" />
             <span @click="playMusic(item.id)" class="iconfont icon-play"></span>
@@ -46,14 +46,14 @@
     <div class="mvs">
       <h3 class="title">推荐MV</h3>
       <div class="items">
-        <div class="item" v-for="(item, index) in mvs" :key="index">
+        <div class="item" @click="toPlayMv(item.id)" v-for="(item, index) in mvs" :key="index">
           <div class="img-wrap">
             <img :src="item.picUrl" alt="" />
             <span class="iconfont icon-play"></span>
             <div class="num-wrap">
               <div class="iconfont icon-play"></div>
               <!-- 播放次数 -->
-              <div class="num">{{item.playCount}}</div>
+              <div class="num">{{item.playCount | ellipsisPlayVolume}}</div>
             </div>
           </div>
           <div class="info-wrap">
@@ -131,6 +131,12 @@ export default {
         let url = res.data.data[0].url
         this.$parent.musicUrl = url
       })
+    },
+    toPlaylist(id) {
+      this.$router.push(`/playlist?id=${id}`)
+    },
+    toPlayMv(id) {
+      this.$router.push(`/mv?id=${id}`)
     }
   },
 };

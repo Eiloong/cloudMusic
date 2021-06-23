@@ -68,7 +68,7 @@
             <img :src="item.cover" alt="" />
             <div class="num-wrap">
               <div class="iconfont icon-play"></div>
-              <div class="num">{{item.playCount}}</div>
+              <div class="num">{{item.playCount | ellipsisPlayVolume}}</div>
             </div>
           </div>
           <div class="info-wrap">
@@ -131,7 +131,7 @@ export default {
   methods: {
     toMv(id) {
       this.$router.push(`/mv?id=${id}`);
-      console.log(id);
+      // console.log(id);
     },
     handleCurrentChange(val) {
       // console.log(`当前页: ${val}`);
@@ -142,11 +142,11 @@ export default {
       let offset = (this.page - 1) * this.limit
       getMvs(this.area, this.type, this.order, this.limit,offset).then(res => {
         this.list = res.data.data
-        for (let i = 0; i < this.list.length; i++) {
-          if(this.list[i].playCount > 100000) {
-            this.list[i].playCount = parseInt(this.list[i].playCount / 10000) + "万"
-          }
-        }
+        // for (let i = 0; i < this.list.length; i++) {
+        //   if(this.list[i].playCount > 100000) {
+        //     this.list[i].playCount = parseInt(this.list[i].playCount / 10000) + "万"
+        //   }
+        // }
       })
     }
   }

@@ -9,7 +9,7 @@
 
 <script>
 import Top from './components/Top.vue'
-import index from './components/02.index.vue';
+import index from './components/index.vue';
 export default {
   name: 'app',
   components: {

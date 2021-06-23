@@ -18,8 +18,7 @@
             <tr class="el-table__row" 
               v-for="(item,index) in songlist" 
               :key="index"
-              @dblclick="playMusic(item.id)"
-              >
+              @dblclick="playMusic(item.id)">
               <td>{{index + 1}}</td>
               <td>
                 <div class="song-wrap">
@@ -35,7 +34,7 @@
               <td>{{item.artists[0].name}}</td>
               <!-- 专辑名称 -->
               <td>{{item.album.name}}</td>
-              <td>{{item.duration}}</td>
+              <td>{{item.duration | formatDuration}}</td>
             </tr>
           </tbody>
         </table>
@@ -47,7 +46,7 @@
             <div class="img-wrap">
               <div class="num-wrap">
                 播放量:
-                <span class="num">{{item.playCount}}</span>
+                <span class="num">{{item.playCount | ellipsisPlayVolume}}</span>
               </div>
               <img :src="item.coverImgUrl" alt="" />
               <span class="iconfont icon-play"></span>
@@ -65,9 +64,9 @@
               <span class="iconfont icon-play"></span>
               <div class="num-wrap">
                 <div class="iconfont icon-play"></div>
-                <div class="num">{{item.playCount}}</div>
+                <div class="num">{{item.playCount | ellipsisPlayVolume}}</div>
               </div>
-              <span class="time">{{item.duration}}</span>
+              <span class="time">{{item.duration | formatDuration}}</span>
             </div>
             <div class="info-wrap">
               <div class="name">{{item.name}}</div>
@@ -130,44 +129,44 @@ export default {
         if(this.type === 1) {
           this.songlist = res.data.result.songs
           this.count = res.data.result.songCount
-          for(let i = 0; i < this.songlist.length; i++) {
-            let min = parseInt(this.songlist[i].duration/1000/60)
-            let sec = parseInt(this.songlist[i].duration/1000%60)
-            if (min < 10) {
-              min = '0' + min
-            }
-            if (sec < 10) {
-              sec = '0' + sec
-            }
-            this.songlist[i].duration = min + ':' + sec
-          } 
+          // for(let i = 0; i < this.songlist.length; i++) {
+          //   let min = parseInt(this.songlist[i].duration/1000/60)
+          //   let sec = parseInt(this.songlist[i].duration/1000%60)
+          //   if (min < 10) {
+          //     min = '0' + min
+          //   }
+          //   if (sec < 10) {
+          //     sec = '0' + sec
+          //   }
+          //   this.songlist[i].duration = min + ':' + sec
+          // } 
         } else if(this.type === 1000) {
           this.playlists = res.data.result.playlists
           this.count = res.data.result.playlistCount
-          for (let i = 0; i < this.playlists.length; i++) {
-            if (this.playlists[i].playCount > 100000) {
-              this.playlists[i].playCount = parseInt(this.playlists[i].playCount/10000) + "万"
-            }
-          }
+          // for (let i = 0; i < this.playlists.length; i++) {
+          //   if (this.playlists[i].playCount > 100000) {
+          //     this.playlists[i].playCount = parseInt(this.playlists[i].playCount/10000) + "万"
+          //   }
+          // }
         } else if(this.type === 1004) {
           this.mvs = res.data.result.mvs
           this.count = res.data.result.mvCount
-          for (let i = 0; i < this.mvs.length; i++) {
-            if (this.mvs[i].playCount > 100000) {
-              this.mvs[i].playCount = parseInt(this.mvs[i].playCount/10000) + "万"
-            }
-          }
-          for(let i = 0; i < this.mvs.length; i++) {
-            let min = parseInt(this.mvs[i].duration/1000/60)
-            let sec = parseInt(this.mvs[i].duration/1000%60)
-            if (min < 10) {
-              min = '0' + min
-            }
-            if (sec < 10) {
-              sec = '0' + sec
-            }
-            this.mvs[i].duration = min + ':' + sec
-          }
+          // for (let i = 0; i < this.mvs.length; i++) {
+          //   if (this.mvs[i].playCount > 100000) {
+          //     this.mvs[i].playCount = parseInt(this.mvs[i].playCount/10000) + "万"
+          //   }
+          // }
+          // for(let i = 0; i < this.mvs.length; i++) {
+          //   let min = parseInt(this.mvs[i].duration/1000/60)
+          //   let sec = parseInt(this.mvs[i].duration/1000%60)
+          //   if (min < 10) {
+          //     min = '0' + min
+          //   }
+          //   if (sec < 10) {
+          //     sec = '0' + sec
+          //   }
+          //   this.mvs[i].duration = min + ':' + sec
+          // }
         }
       })
     },

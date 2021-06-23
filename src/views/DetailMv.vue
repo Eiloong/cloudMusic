@@ -98,9 +98,9 @@
               <span class="iconfont icon-play"></span>
               <div class="num-wrap">
                 <div class="iconfont icon-play"></div>
-                <div class="num">{{item.playCount}}</div>
+                <div class="num">{{item.playCount | ellipsisPlayVolume}}</div>
               </div>
-              <span class="time">{{item.duration}}</span>
+              <span class="time">{{item.duration | formatDuration}}</span>
             </div>
             <div class="info-wrap">
               <div class="name">{{item.name}}</div>

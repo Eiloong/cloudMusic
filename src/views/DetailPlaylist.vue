@@ -43,7 +43,7 @@
               <td>{{index + 1}}</td>
               <td>
                 <div class="img-wrap">
-                  <img src="../assets/songCover.jpg" alt="" />
+                  <img :src="item.al.picUrl" alt="" />
                   <span class="iconfont icon-play"></span>
                 </div>
               </td>
@@ -58,7 +58,7 @@
               </td>
               <td>{{item.ar[0].name}}</td>
               <td>{{item.al.name}}</td>
-              <td>{{item.dt}}</td>
+              <td>{{item.dt | formatDuration}}</td>
             </tr>
           </tbody>
         </table>
@@ -81,7 +81,7 @@
                   <span class="name">{{item.beReplied[0].user.nickname}}：</span>
                   <span class="comment">{{item.beReplied[0].content}}</span>
                 </div>
-                <div class="date">{{item.time}}</div>
+                <div class="date">{{item.time | LocaleString}}</div>
               </div>
             </div>
           </div>
@@ -103,7 +103,7 @@
                   <span class="name">{{item.beReplied[0].user.nickname}}：</span>
                   <span class="comment">{{item.beReplied[0].content}}</span>
                 </div>
-                <div class="date">{{item.time}}</div>
+                <div class="date">{{item.time | LocaleString}}</div>
               </div>
             </div>
           </div>
@@ -115,8 +115,7 @@
           layout="prev, pager, next"
           :total="total"
           :current-page="page"
-          :page-size="2"
-        >
+          :page-size="2">
         </el-pagination>
       </el-tab-pane>
     </el-tabs>
@@ -160,9 +159,8 @@ export default {
       // console.log(this.$route.query.id);
       let id = this.$route.query.id
       getPlayinfo(id).then(res => {
-        // console.log(res);
         this.playlist = res.data.playlist
-
+        console.log(this.playlist);
       })
     },
     getHotcomments() {
@@ -172,10 +170,10 @@ export default {
         this.hotComment = res.data.hotComments
         this.hotCount = res.data.total
         this.total = res.data.total
-        for(let i = 0; i < this.hotComment.length; i++) {
-          let time = new Date(this.hotComment[i].time)
-          this.hotComment[i].time = time.toLocaleDateString().replace(/\//g, "-") + " " + time.toTimeString().substr(0, 8)
-        }
+        // for(let i = 0; i < this.hotComment.length; i++) {
+        //   let time = new Date(this.hotComment[i].time)
+        //   this.hotComment[i].time = time.toLocaleDateString().replace(/\//g, "-") + " " + time.toTimeString().substr(0, 8)
+        // }
       })
     },
     getLatestcomments() {
@@ -186,10 +184,10 @@ export default {
         this.newCount = res.data.total
         this.total = Math.ceil((res.data.total) / 5)
         // console.log(res);
-        for(let i = 0; i < this.newComments.length; i++) {
-          let time = new Date(this.newComments[i].time)
-          this.newComments[i].time = time.toLocaleDateString().replace(/\//g, "-") + " " + time.toTimeString().substr(0, 8)
-        }
+        // for(let i = 0; i < this.newComments.length; i++) {
+        //   let time = new Date(this.newComments[i].time)
+        //   this.newComments[i].time = time.toLocaleDateString().replace(/\//g, "-") + " " + time.toTimeString().substr(0, 8)
+        // }
       })
     }
   }
