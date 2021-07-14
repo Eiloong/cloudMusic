@@ -3,7 +3,7 @@
     <!-- 同步 -->
     <div class="top-card">
       <div class="icon-wrap">
-        <img :src="toplist.coverImgUrl" alt="" />
+        <img v-lazy="toplist.coverImgUrl" alt="" />
       </div>
       <div class="content-wrap">
         <div class="tag">精品歌单</div>
@@ -14,7 +14,7 @@
           {{toplist.description}}
         </div>
       </div>
-      <img :src="toplist.coverImgUrl" alt="" class="bg" />
+      <img v-lazy="toplist.coverImgUrl" alt="" class="bg" />
       <div class="bg-mask"></div>
     </div>
     <div class="tab-container">
@@ -44,7 +44,7 @@
                 播放量:
                 <span class="num">{{item.playCount}}</span>
               </div>
-              <img :src="item.coverImgUrl" alt="" />
+              <img v-lazy="item.coverImgUrl" alt="" />
               <span class="iconfont icon-play"></span>
             </div>
             <p class="name">{{item.name}}</p>
@@ -84,6 +84,7 @@ export default {
   },
   // 侦听器
   watch: {
+    // 监听 tag 变化
     tag() {
       this.page = 1
       this.getHighquality()
@@ -91,7 +92,9 @@ export default {
     }
   },
   created() {
+    // 获取顶部精品歌单
     this.getHighquality()
+    // 获取歌单列表
     this.getPlaylist()
   },
   methods: {
@@ -102,16 +105,14 @@ export default {
     },
     getHighquality() {
       const limit = 1
-      const cat = this.tag
-      getHighquality(limit,cat).then(res => {
+      getHighquality(limit,this.tag).then(res => {
         this.toplist = res.data.playlists[0]
       })
     },
     getPlaylist() {
       const limit = 10
       const offset = (this.page - 1) * 10
-      const cat = this.tag
-      getPlaylist(limit,offset,cat).then(res => {
+      getPlaylist(limit,offset,this.tag).then(res => {
         this.playlists = res.data.playlists
         this.total = res.data.total
       })

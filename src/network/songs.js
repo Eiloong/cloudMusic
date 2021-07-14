@@ -1,10 +1,12 @@
 import {request} from './request'
 
-export function getSongs(type) {
+export function getSongs(type,limit,offset) {
   return request({
     url: '/top/song',
     params: {
-      type
+      type,
+      limit,
+      offset
     }
   })
 }

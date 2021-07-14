@@ -18,11 +18,11 @@
         <th>时长</th>
       </thead>
       <tbody>
-        <tr class="el-table__row" @dblclick="playMusic(item.id, item.name)" v-for="(item,index) in lists" :key="index">
+        <tr class="el-table__row" @dblclick="playMusic(item.id, item.name)" v-for="(item,index) in currentList" :key="index">
           <td>{{index + 1}}</td>
           <td>
             <div class="img-wrap">
-              <img :src="item.album.picUrl" alt="" />
+              <img v-lazy="item.album.picUrl" alt="" />
               <span @click="playMusic(item.id)" class="iconfont icon-play"></span>
             </div>
           </td>
@@ -45,6 +45,15 @@
         </tr>
       </tbody>
     </table>
+    <el-pagination
+      @current-change="currentPageChange"
+      background
+      :current-page="page"
+      :page-size="limit"
+      layout="prev, pager, next"
+      :total="100"
+    >
+    </el-pagination>
   </div>
 </template>
 
@@ -57,11 +66,16 @@ export default {
     return {
       // 歌曲列表
       lists: [],
-      type: 0
+      currentList: [],
+      // 分类信息
+      type: 0,
+      page: 1,
+      limit: 15,
     };
   },
   watch: {
     type() {
+      this.page = 1
       this.getSongs()
     }
   },
@@ -69,10 +83,19 @@ export default {
     this.getSongs()
   },
   methods: {
+    currentPageChange(val) {
+      this.page = val
+      let start = (this.page - 1) * this.limit
+      let end = (this.page - 1) * this.limit + this.limit
+      this.currentList = this.lists.slice(start, end)
+      console.log('this.lists.splice(start, end): ', this.lists.slice(15, 30))
+    },
     getSongs() {
       let type = this.type
-      getSongs(type).then(res => {
+      let offset = (this.page - 1) * this.limit
+      getSongs(type,this.limit,offset).then(res => {
         this.lists = res.data.data
+        this.currentList = this.lists.slice(0, this.limit)
         // console.log(type);
       })
     },

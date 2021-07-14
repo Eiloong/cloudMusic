@@ -1,12 +1,12 @@
 import { request } from "./request";
 
-export function getResult(keywords, limit,  type) {
+export function getResult(keywords, limit, offset, type) {
   return request({
     url: '/search',
     params: {
       keywords,
       limit,
-      // offset,
+      offset,
       type
     }
   })

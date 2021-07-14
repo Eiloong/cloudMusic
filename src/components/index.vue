@@ -29,7 +29,10 @@
       </ul>
     </div>
     <div class="main">
-      <router-view></router-view>
+      <keep-alive>
+        <router-view :key="$route.fullPath"></router-view>
+      </keep-alive>
+      <el-backtop target=".main"></el-backtop>
     </div>
     <div class="player">
       <audio :src="musicUrl" controls autoplay></audio>

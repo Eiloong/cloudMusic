@@ -3,7 +3,9 @@
     <!-- 轮播图 -->
     <el-carousel class="" :interval="4000" type="card">
       <el-carousel-item v-for="(item, index) in banners" :key="index">
-        <img :src="item.imageUrl" alt="" />
+        <a :href="item.url">
+          <img v-lazy="item.imageUrl" alt="" />
+        </a>
       </el-carousel-item>
     </el-carousel>
     <!-- 推荐歌单 -->
@@ -17,7 +19,7 @@
             <div class="desc-wrap">
               <span class="desc">{{item.copywriter}}</span>
             </div>
-            <img :src="item.picUrl" alt="" />
+            <img v-lazy="item.picUrl" alt="" />
             <span class="iconfont icon-play"></span>
           </div>
           <p class="name">{{item.name}}</p>
@@ -32,7 +34,7 @@
       <div class="items">
         <div class="item" @dblclick="playMusic(item.id)" v-for="(item, index) in songs" :key="index">
           <div class="img-wrap">
-            <img :src="item.picUrl" alt="" />
+            <img v-lazy="item.picUrl" alt="" />
             <span @click="playMusic(item.id)" class="iconfont icon-play"></span>
           </div>
           <div class="song-wrap">
@@ -48,7 +50,7 @@
       <div class="items">
         <div class="item" @click="toPlayMv(item.id)" v-for="(item, index) in mvs" :key="index">
           <div class="img-wrap">
-            <img :src="item.picUrl" alt="" />
+            <img v-lazy="item.picUrl" alt="" />
             <span class="iconfont icon-play"></span>
             <div class="num-wrap">
               <div class="iconfont icon-play"></div>
@@ -91,10 +93,13 @@ export default {
     }
   },
   created() {
-    //
+    // 获取轮播图图片地址
     this.getBanner()
+    // 获取推荐歌单
     this.getPersonalized()
+    // 获取最新音乐
     this.getNewsong()
+    // 获取推荐mv
     this.getMvs()
   },
   methods: {

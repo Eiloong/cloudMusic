@@ -48,7 +48,7 @@
                 播放量:
                 <span class="num">{{item.playCount | ellipsisPlayVolume}}</span>
               </div>
-              <img :src="item.coverImgUrl" alt="" />
+              <img v-lazy="item.coverImgUrl" alt="" />
               <span class="iconfont icon-play"></span>
             </div>
             <p class="name">{{item.name}}</p>
@@ -60,7 +60,7 @@
         <div class="items mv">
           <div class="item" @click="toPlayMv(item.id)" v-for="(item,index) in mvs" :key="index">
             <div class="img-wrap">
-              <img :src="item.cover" alt="" />
+              <img v-lazy="item.cover" alt="" />
               <span class="iconfont icon-play"></span>
               <div class="num-wrap">
                 <div class="iconfont icon-play"></div>
@@ -75,6 +75,15 @@
           </div>
         </div>
       </el-tab-pane>
+      <el-pagination
+        @current-change="handleCurrentChange"
+        background
+        layout="prev, pager, next"
+        :total="count"
+        :current-page="page"
+        :page-size="limit"
+      >
+      </el-pagination>
     </el-tabs>
   </div>
 </template>
@@ -88,6 +97,7 @@ export default {
     return {
       activeIndex: 'songs',
       limit: 10,
+      page: 1,
       // 搜索类型；默认为 1 即单曲 , 取值意义 : 1: 单曲, 1000: 歌单, 1004: MV
       type: 1,
       // 保存 歌曲列表
@@ -101,7 +111,10 @@ export default {
     };
   },
   watch: {
+    // 切换面板 查询信息
     activeIndex() {
+      this.limit = 10
+      this.page = 1
       switch (this.activeIndex) {
         case 'songs':
           this.type = 1
@@ -113,6 +126,9 @@ export default {
           this.type = 1004
           this.limit = 8
           break;
+        default:
+          this.type = 1
+          break
       }
       this.getResult()
     }
@@ -121,52 +137,25 @@ export default {
     this.getResult()
   },
   methods: {
+    handleCurrentChange(val) {
+      this.page = val
+      this.getResult()
+    },
     getResult() {
       let keywords = this.$route.query.wd
-      getResult(keywords,this.limit,this.type).then(res => {
+      let offset = (this.page - 1) * this.limit
+      getResult(keywords,this.limit,offset,this.type).then(res => {
         // console.log(res);
         // 判断搜索类型
         if(this.type === 1) {
           this.songlist = res.data.result.songs
           this.count = res.data.result.songCount
-          // for(let i = 0; i < this.songlist.length; i++) {
-          //   let min = parseInt(this.songlist[i].duration/1000/60)
-          //   let sec = parseInt(this.songlist[i].duration/1000%60)
-          //   if (min < 10) {
-          //     min = '0' + min
-          //   }
-          //   if (sec < 10) {
-          //     sec = '0' + sec
-          //   }
-          //   this.songlist[i].duration = min + ':' + sec
-          // } 
         } else if(this.type === 1000) {
           this.playlists = res.data.result.playlists
           this.count = res.data.result.playlistCount
-          // for (let i = 0; i < this.playlists.length; i++) {
-          //   if (this.playlists[i].playCount > 100000) {
-          //     this.playlists[i].playCount = parseInt(this.playlists[i].playCount/10000) + "万"
-          //   }
-          // }
         } else if(this.type === 1004) {
           this.mvs = res.data.result.mvs
           this.count = res.data.result.mvCount
-          // for (let i = 0; i < this.mvs.length; i++) {
-          //   if (this.mvs[i].playCount > 100000) {
-          //     this.mvs[i].playCount = parseInt(this.mvs[i].playCount/10000) + "万"
-          //   }
-          // }
-          // for(let i = 0; i < this.mvs.length; i++) {
-          //   let min = parseInt(this.mvs[i].duration/1000/60)
-          //   let sec = parseInt(this.mvs[i].duration/1000%60)
-          //   if (min < 10) {
-          //     min = '0' + min
-          //   }
-          //   if (sec < 10) {
-          //     sec = '0' + sec
-          //   }
-          //   this.mvs[i].duration = min + ':' + sec
-          // }
         }
       })
     },

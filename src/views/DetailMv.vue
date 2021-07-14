@@ -6,7 +6,7 @@
       <div class="video-wrap">
         <video
           controls
-          :src="mvUrl.url"
+          v-lazy="mvUrl.url"
         ></video>
       </div>
       <!-- mv信息 -->
@@ -14,7 +14,7 @@
         <div class="singer-info">
           <div class="avatar-wrap">
             <!-- 头像 -->
-            <img :src="icon" alt="" />
+            <img v-lazy="icon" alt="" />
           </div>
           <!-- 歌手名 -->
           <span class="name">{{mvInfo.artistName}}</span>
@@ -35,7 +35,7 @@
         <div class="comments-wrap">
           <div class="item" v-for="(item,index) in mvCommentInfo.hotComments" :key="index">
             <div class="icon-wrap">
-              <img :src="item.user.avatarUrl" alt="" />
+              <img v-lazy="item.user.avatarUrl" alt="" />
             </div>
             <div class="content-wrap">
               <div class="content">
@@ -59,7 +59,7 @@
         <div class="comments-wrap">
           <div class="item" v-for="(item, index) in mvCommentInfo.comments" :key="index">
             <div class="icon-wrap">
-              <img :src="item.user.avatarUrl" alt="" />
+              <img v-lazy="item.user.avatarUrl" alt="" />
             </div>
             <div class="content-wrap">
               <div class="content">
@@ -83,8 +83,7 @@
         layout="prev, pager, next"
         :total="total"
         :current-page="page"
-        :page-size="2"
-        :limit="limit"
+        :page-size="limit"
       >
       </el-pagination>
     </div>
@@ -92,9 +91,9 @@
       <h3 class="title">相关推荐</h3>
       <div class="mvs">
         <div class="items">
-          <div class="item" v-for="item in simiMv" :key="item.id">
+          <div class="item" v-for="item in simiMv" :key="item.id" @click="toDetailMv(item.id)">
             <div class="img-wrap">
-              <img :src="item.cover" alt="" />
+              <img v-lazy="item.cover" alt="" />
               <span class="iconfont icon-play"></span>
               <div class="num-wrap">
                 <div class="iconfont icon-play"></div>
@@ -139,14 +138,15 @@ export default {
     };
   },
   created() {
+    let id = this.$route.query.id
     // 获取mv地址
-    this.getMvurl()
+    this.getMvurl(id)
     // 获取相似mv
-    this.getSimimv()
+    this.getSimimv(id)
     // 获取mv信息
-    this.getDetailMv()
+    this.getDetailMv(id)
     // 获取MV评论信息
-    this.getCommentMV()
+    this.getCommentMV(id)
   },
   methods: {
     handleCurrentChange(val) {
@@ -156,20 +156,17 @@ export default {
     /**
      * 
      */
-    getMvurl() {
-      let id = this.$route.query.id
+    getMvurl(id) {
       getMvurl(id).then(res => {
         this.mvUrl = res.data.data
       })
     },
-    getSimimv() {
-      let id = this.$route.query.id
+    getSimimv(id) {
       getSimimv(id).then(res => {
         this.simiMv = res.data.mvs
       })
     },
-    getDetailMv() {
-      let mvid = this.$route.query.id
+    getDetailMv(mvid) {
       getDetailMv(mvid).then(res => {
         this.mvInfo = res.data.data
         let id = this.mvInfo.artists[0].id
@@ -179,12 +176,14 @@ export default {
         })
       })
     },
-    getCommentMV() {
-      let id = this.$route.query.id
+    getCommentMV(id) {
       let offset = (this.page - 1) * this.limit
       getCommentMV(id,this.limit,offset).then(res => {
         this.mvCommentInfo = res.data
       })
+    },
+    toDetailMv(id) {
+      this.$router.push(`/mv?id=${id}`);
     }
   }
 };

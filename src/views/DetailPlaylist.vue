@@ -2,14 +2,14 @@
   <div class="playlist-container">
     <div class="top-wrap">
       <div class="img-wrap">
-        <img :src="playlist.coverImgUrl" alt="" />
+        <img v-lazy="playlist.coverImgUrl" alt="" />
       </div>
       <div class="info-wrap">
         <p class="title">{{playlist.name}}</p>
         <div class="author-wrap">
-          <img class="avatar" :src="playlist.creator.avatarUrl" alt="" />
+          <img class="avatar" v-lazy="playlist.creator.avatarUrl" alt="" />
           <span class="name">{{playlist.creator.nickname}}</span>
-          <span class="time">{{playlist.createTime}} 创建</span>
+          <span class="time">{{playlist.createTime | LocaleString}} 创建</span>
         </div>
         <div class="play-wrap">
           <span class="iconfont icon-circle-play"></span>
@@ -43,7 +43,7 @@
               <td>{{index + 1}}</td>
               <td>
                 <div class="img-wrap">
-                  <img :src="item.al.picUrl" alt="" />
+                  <img v-lazy="item.al.picUrl" alt="" />
                   <span class="iconfont icon-play"></span>
                 </div>
               </td>
@@ -70,7 +70,7 @@
           <div class="comments-wrap">
             <div class="item" v-for="item in hotComment" :key="item.commentId">
               <div class="icon-wrap">
-                <img :src="item.user.avatarUrl" alt="" />
+                <img v-lazy="item.user.avatarUrl" alt="" />
               </div>
               <div class="content-wrap">
                 <div class="content">
@@ -92,7 +92,7 @@
           <div class="comments-wrap">
             <div class="item" v-for="item in newComments" :key="item.commentId">
               <div class="icon-wrap">
-                <img :src="item.user.avatarUrl" alt="" />
+                <img v-lazy="item.user.avatarUrl" alt="" />
               </div>
               <div class="content-wrap">
                 <div class="content">
@@ -115,7 +115,7 @@
           layout="prev, pager, next"
           :total="total"
           :current-page="page"
-          :page-size="2">
+          :page-size="limit">
         </el-pagination>
       </el-tab-pane>
     </el-tabs>
@@ -170,10 +170,6 @@ export default {
         this.hotComment = res.data.hotComments
         this.hotCount = res.data.total
         this.total = res.data.total
-        // for(let i = 0; i < this.hotComment.length; i++) {
-        //   let time = new Date(this.hotComment[i].time)
-        //   this.hotComment[i].time = time.toLocaleDateString().replace(/\//g, "-") + " " + time.toTimeString().substr(0, 8)
-        // }
       })
     },
     getLatestcomments() {
@@ -183,11 +179,6 @@ export default {
         this.newComments = res.data.comments
         this.newCount = res.data.total
         this.total = Math.ceil((res.data.total) / 5)
-        // console.log(res);
-        // for(let i = 0; i < this.newComments.length; i++) {
-        //   let time = new Date(this.newComments[i].time)
-        //   this.newComments[i].time = time.toLocaleDateString().replace(/\//g, "-") + " " + time.toTimeString().substr(0, 8)
-        // }
       })
     }
   }

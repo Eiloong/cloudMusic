@@ -65,7 +65,7 @@
       <div class="items">
         <div class="item" @click="toMv(item.id)" v-for="(item,index) in list" :key="index">
           <div class="img-wrap">
-            <img :src="item.cover" alt="" />
+            <img v-lazy="item.cover" alt="" />
             <div class="num-wrap">
               <div class="iconfont icon-play"></div>
               <div class="num">{{item.playCount | ellipsisPlayVolume}}</div>
@@ -100,7 +100,7 @@ export default {
   data() {
     return {
       // 总条数
-      total: 20,
+      total: 40,
       // 页码
       page: 1,
       // 页容量
@@ -134,7 +134,6 @@ export default {
       // console.log(id);
     },
     handleCurrentChange(val) {
-      // console.log(`当前页: ${val}`);
       this.page = val
       this.getMvs()
     },
@@ -142,11 +141,6 @@ export default {
       let offset = (this.page - 1) * this.limit
       getMvs(this.area, this.type, this.order, this.limit,offset).then(res => {
         this.list = res.data.data
-        // for (let i = 0; i < this.list.length; i++) {
-        //   if(this.list[i].playCount > 100000) {
-        //     this.list[i].playCount = parseInt(this.list[i].playCount / 10000) + "万"
-        //   }
-        // }
       })
     }
   }
