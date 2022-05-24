@@ -5,22 +5,46 @@
         <span class="section-type">地区:</span>
         <ul class="tabs-wrap">
           <li class="tab">
-            <span class="title" :class="{active:area=='全部'}" @click="area='全部'">全部</span>
+            <span
+              :class="['title', { active: queryInfo.area == '全部' }]"
+              @click="queryInfo.area = '全部'"
+              >全部</span
+            >
           </li>
           <li class="tab">
-            <span class="title" :class="{active:area=='内地'}" @click="area='内地'">内地</span>
+            <span
+              :class="['title', { active: queryInfo.area == '内地' }]"
+              @click="queryInfo.area = '内地'"
+              >内地</span
+            >
           </li>
           <li class="tab">
-            <span class="title" :class="{active:area=='港台'}" @click="area='港台'">港台</span>
+            <span
+              :class="['title', { active: queryInfo.area == '港台' }]"
+              @click="queryInfo.area = '港台'"
+              >港台</span
+            >
           </li>
           <li class="tab">
-            <span class="title" :class="{active:area=='欧美'}" @click="area='欧美'">欧美</span>
+            <span
+              :class="['title', { active: queryInfo.area == '欧美' }]"
+              @click="queryInfo.area = '欧美'"
+              >欧美</span
+            >
           </li>
           <li class="tab">
-            <span class="title" :class="{active:area=='日本'}" @click="area='日本'">日本</span>
+            <span
+              :class="['title', { active: queryInfo.area == '日本' }]"
+              @click="queryInfo.area = '日本'"
+              >日本</span
+            >
           </li>
           <li class="tab">
-            <span class="title" :class="{active:area=='韩国'}" @click="area='韩国'">韩国</span>
+            <span
+              :class="['title', { active: queryInfo.area == '韩国' }]"
+              @click="queryInfo.area = '韩国'"
+              >韩国</span
+            >
           </li>
         </ul>
       </div>
@@ -28,19 +52,39 @@
         <span class="type-type">类型:</span>
         <ul class="tabs-wrap">
           <li class="tab">
-            <span class="title" :class="{active:type=='全部'}" @click="type='全部'">全部</span>
+            <span
+              :class="['title', { active: queryInfo.type == '全部' }]"
+              @click="queryInfo.type = '全部'"
+              >全部</span
+            >
           </li>
           <li class="tab">
-            <span class="title" :class="{active:type=='官方版'}" @click="type='官方版'">官方版</span>
+            <span
+              :class="['title', { active: queryInfo.type == '官方版' }]"
+              @click="queryInfo.type = '官方版'"
+              >官方版</span
+            >
           </li>
           <li class="tab">
-            <span class="title" :class="{active:type=='原声'}" @click="type='原声'">原声</span>
+            <span
+              :class="['title', { active: queryInfo.type == '原声' }]"
+              @click="queryInfo.type = '原声'"
+              >原声</span
+            >
           </li>
           <li class="tab">
-            <span class="title" :class="{active:type=='现场版'}" @click="type='现场版'">现场版</span>
+            <span
+              :class="['title', { active: queryInfo.type == '现场版' }]"
+              @click="queryInfo.type = '现场版'"
+              >现场版</span
+            >
           </li>
           <li class="tab">
-            <span class="title" :class="{active:type=='网易出品'}" @click="type='网易出品'">网易出品</span>
+            <span
+              :class="['title', { active: queryInfo.type == '网易出品' }]"
+              @click="queryInfo.type = '网易出品'"
+              >网易出品</span
+            >
           </li>
         </ul>
       </div>
@@ -48,44 +92,61 @@
         <span class="order-type">排序:</span>
         <ul class="tabs-wrap">
           <li class="tab">
-            <span class="title" :class="{active:order=='上升最快'}" @click="order='上升最快'">上升最快</span>
+            <span
+              :class="['title', { active: queryInfo.order == '上升最快' }]"
+              @click="queryInfo.order = '上升最快'"
+              >上升最快</span
+            >
           </li>
           <li class="tab">
-            <span class="title" :class="{active:order=='最热'}" @click="order='最热'">最热</span>
+            <span
+              :class="['title', { active: queryInfo.order == '最热' }]"
+              @click="queryInfo.order = '最热'"
+              >最热</span
+            >
           </li>
           <li class="tab">
-            <span class="title" :class="{active:order=='最新'}" @click="order='最新'">最新</span>
+            <span
+              :class="['title', { active: queryInfo.order == '最新' }]"
+              @click="queryInfo.order = '最新'"
+              >最新</span
+            >
           </li>
         </ul>
       </div>
     </div>
-    <!-- mv容器 -->
     <!-- 推荐MV -->
     <div class="mvs">
       <div class="items">
-        <div class="item" @click="toMv(item.id)" v-for="(item,index) in list" :key="index">
+        <div
+          class="item"
+          @click="toMv(item.id)"
+          v-for="(item, index) in mvlist"
+          :key="index"
+        >
           <div class="img-wrap">
             <img v-lazy="item.cover" alt="" />
             <div class="num-wrap">
               <div class="iconfont icon-play"></div>
-              <div class="num">{{item.playCount | ellipsisPlayVolume}}</div>
+              <div class="num">{{ item.playCount | ellipsisPlayVolume }}</div>
             </div>
           </div>
           <div class="info-wrap">
-            <div class="name">{{item.name}}</div>
-            <div class="singer">{{item.artistName}}</div>
+            <div class="name">{{ item.name }}</div>
+            <div class="singer">{{ item.artistName }}</div>
           </div>
         </div>
       </div>
       <!-- 分页器 -->
       <el-pagination
+        :hide-on-single-page="true"
+        @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        background
-        layout="prev, pager, next"
-        :total="total"
-        :current-page="page"
-        :page-size="4"
-        :limit="limit"
+        :current-page="paginationForm.page"
+        :page-sizes="[4, 8, 12, 16, 20, 40]"
+        :page-size="paginationForm.limit"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="paginationForm.total"
       >
       </el-pagination>
     </div>
@@ -93,60 +154,99 @@
 </template>
 
 <script>
-import {getMvs} from '@/network/mvs'
-
 export default {
-  name: 'mvs',
+  name: 'Mvs',
   data() {
     return {
-      // 总条数
-      total: 40,
-      // 页码
-      page: 1,
-      // 页容量
-      limit: 8,
-      area: '全部',
-      type: '全部',
-      order: '上升最快',
-      list: []
-    };
-  },
-  watch: {
-    area() {
-      this.page = 1
-      this.getMvs()
-    },
-    type() {
-      this.page = 1
-      this.getMvs()
-    },
-    order() {
-      this.page = 1
-      this.getMvs()
-    },
+      // 分页信息
+      paginationForm: {
+        // 总条数
+        total: 0,
+        // 页码
+        page: 0,
+        // 页容量
+        limit: 8,
+      },
+      // 查询信息
+      queryInfo: {
+        // `area`: 地区,可选值为：全部、内地、港台、欧美、日本、韩国、不填则为全部
+        area: '欧美',
+        // `type`: 类型,可选值为：全部、官方版、原生、现场版、网易出品,不填则为全部
+        type: '全部',
+        // `order`: 排序,可选值为：上升最快、最热、最新、不填则为上升最快
+        order: '最热',
+      },
+      // mv列表
+      mvlist: [],
+    }
   },
   created() {
     this.getMvs()
   },
+  watch: {
+    // 1.watch对象方式一
+    queryInfo: {
+      handler(val) {
+        this.paginationForm = {
+          total: 0,
+          page: 0,
+          limit: 8,
+        }
+        this.queryInfo = val
+        this.getMvs()
+      },
+      deep: true,
+    },
+  },
+  // 过滤器
+  filters: {
+    // 省略播放量
+    ellipsisPlayVolume(val) {
+      // 大于十万的显示 xx万
+      if (val < 100000) return val
+      return parseInt(val / 10000) + '万'
+    },
+  },
   methods: {
     toMv(id) {
-      this.$router.push(`/mv?id=${id}`);
-      // console.log(id);
+      this.$router.push(`/mv?id=${id}`)
     },
+    // 页码发生变化
     handleCurrentChange(val) {
-      this.page = val
+      this.paginationForm.page = val
       this.getMvs()
     },
-    getMvs() {
-      let offset = (this.page - 1) * this.limit
-      getMvs(this.area, this.type, this.order, this.limit,offset).then(res => {
-        this.list = res.data.data
+    // 页容量发生变化
+    handleSizeChange(val) {
+      this.paginationForm.limit = val
+      this.getMvs()
+    },
+    // 获取所有mv数据
+    async getMvs() {
+      const { data: data } = await this.$axios.get('/mv/all', {
+        params: {
+          // 歌曲地区
+          area: this.queryInfo.area,
+          // 歌曲类型
+          type: this.queryInfo.type,
+          // 歌曲排序
+          order: this.queryInfo.order,
+          // 页面容量
+          limit: this.paginationForm.limit,
+          // 分页 相当于页码
+          offset: this.paginationForm.page,
+        },
       })
-    }
-  }
-};
+      if (data.code == 200) {
+        this.mvlist = data.data
+        // 当切换页码和页容量的 的时候未返回total,不能赋值
+        if (data.count) {
+          this.paginationForm.total = data.count
+        }
+      }
+    },
+  },
+}
 </script>
 
-<style >
-
-</style>
+<style></style>

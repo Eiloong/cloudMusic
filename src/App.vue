@@ -1,25 +1,30 @@
 <template>
   <div id="app">
     <Top />
-    <keep-alive>
-    <index />
-    </keep-alive>
+    <Index />
   </div>
 </template>
 
 <script>
-import Top from './components/Top.vue'
-import index from './components/index.vue';
+import Top from './components/Top'
+import Index from './components/Index.vue'
 export default {
-  name: 'app',
-  components: {
-    Top,
-    index
+  components: { Top, Index },
+  created() {
+    // 空格暂停
+    window.addEventListener('keyup', (event) => {
+      // 32 空格
+      if (event.ctrlKey) {
+        if (event.keyCode == 32 || event.code == 'Space') {
+          this.$Bus.$emit('toggle')
+          e.preventDefault()
+          e.stopPropagation()
+          return false
+        }
+      }
+    })
   },
-
-};
+}
 </script>
 
-<style >
-
-</style>
+<style></style>

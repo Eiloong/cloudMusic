@@ -3,127 +3,219 @@
     <!-- 同步 -->
     <div class="top-card">
       <div class="icon-wrap">
-        <img v-lazy="toplist.coverImgUrl" alt="" />
+        <!-- 封面 -->
+        <img v-lazy="topList.coverImgUrl" alt="" />
       </div>
       <div class="content-wrap">
         <div class="tag">精品歌单</div>
-        <div class="title">
-          {{toplist.name}}
-        </div>
+        <!-- 标题 -->
+        <div class="title">{{ topList.name }}</div>
+        <!-- 介绍 -->
         <div class="info">
-          {{toplist.description}}
+          {{ topList.description }}
         </div>
       </div>
-      <img v-lazy="toplist.coverImgUrl" alt="" class="bg" />
+      <!-- 背景 -->
+      <img v-lazy="topList.coverImgUrl" alt="" class="bg" />
       <div class="bg-mask"></div>
     </div>
     <div class="tab-container">
       <!-- tab栏 顶部 -->
       <div class="tab-bar">
-        <span class="item" :class="{active: tag=='全部'}" @click="tag='全部'">全部</span>
-        <span class="item" :class="{active: tag=='欧美'}" @click="tag='欧美'">欧美</span>
-        <span class="item" :class="{active: tag=='华语'}" @click="tag='华语'">华语</span>
-        <span class="item" :class="{active: tag=='流行'}" @click="tag='流行'">流行</span>
-        <span class="item" :class="{active: tag=='说唱'}" @click="tag='说唱'">说唱</span>
-        <span class="item" :class="{active: tag=='摇滚'}" @click="tag='摇滚'">摇滚</span>
-        <span class="item" :class="{active: tag=='民谣'}" @click="tag='民谣'">民谣</span>
-        <span class="item" :class="{active: tag=='电子'}" @click="tag='电子'">电子</span>
-        <span class="item" :class="{active: tag=='轻音乐'}" @click="tag='轻音乐'">轻音乐</span>
-        <span class="item" :class="{active: tag=='影视原声'}" @click="tag='影视原声'">影视原声</span>
-        <span class="item" :class="{active: tag=='ACG'}" @click="tag='ACG'">ACG</span>
-        <span class="item" :class="{active: tag=='怀旧'}" @click="tag='怀旧'">怀旧</span>
-        <span class="item" :class="{active: tag=='治愈'}" @click="tag='治愈'">治愈</span>
-        <span class="item" :class="{active: tag=='旅行'}" @click="tag='旅行'">旅行</span>
+        <span
+          :class="['item', { active: selected == '全部' }]"
+          @click="selected = '全部'"
+          >全部</span
+        >
+        <span
+          :class="['item', { active: selected == '欧美' }]"
+          @click="selected = '欧美'"
+          >欧美</span
+        >
+        <span
+          :class="['item', { active: selected == '华语' }]"
+          @click="selected = '华语'"
+          >华语</span
+        >
+        <span
+          :class="['item', { active: selected == '流行' }]"
+          @click="selected = '流行'"
+          >流行</span
+        >
+        <span
+          :class="['item', { active: selected == '说唱' }]"
+          @click="selected = '说唱'"
+          >说唱</span
+        >
+        <span
+          :class="['item', { active: selected == '摇滚' }]"
+          @click="selected = '摇滚'"
+          >摇滚</span
+        >
+        <span
+          :class="['item', { active: selected == '民谣' }]"
+          @click="selected = '民谣'"
+          >民谣</span
+        >
+        <span
+          :class="['item', { active: selected == '电子' }]"
+          @click="selected = '电子'"
+          >电子</span
+        >
+        <span
+          :class="['item', { active: selected == '轻音乐' }]"
+          @click="selected = '轻音乐'"
+          >轻音乐</span
+        >
+        <span
+          :class="['item', { active: selected == '影视原声' }]"
+          @click="selected = '影视原声'"
+          >影视原声</span
+        >
+        <span
+          :class="['item', { active: selected == 'ACG' }]"
+          @click="selected = 'ACG'"
+          >ACG</span
+        >
+        <span
+          :class="['item', { active: selected == '怀旧' }]"
+          @click="selected = '怀旧'"
+          >怀旧</span
+        >
       </div>
       <!-- tab的内容区域 -->
       <div class="tab-content">
         <div class="items">
-          <div class="item" @click="toPlaylist(item.id)" v-for="(item,index) in playlists" :key="index">
+          <div
+            class="item"
+            @click="toPlayListDetail(item.id)"
+            v-for="(item, index) in list"
+            :key="index"
+          >
             <div class="img-wrap">
               <div class="num-wrap">
                 播放量:
-                <span class="num">{{item.playCount}}</span>
+                <span class="num">{{ item.playCount }}</span>
               </div>
               <img v-lazy="item.coverImgUrl" alt="" />
               <span class="iconfont icon-play"></span>
             </div>
-            <p class="name">{{item.name}}</p>
+            <p class="name">{{ item.name }}</p>
           </div>
         </div>
       </div>
     </div>
-    <!-- 分页器 -->
     <el-pagination
+      :hide-on-single-page="true"
+      @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      background
-      layout="prev, pager, next"
-      :total="total"
-      :current-page="page"
-      :page-size="20"
+      :current-page="paginationForm.page"
+      :page-sizes="[5, 10, 15, 20, 50]"
+      :page-size="paginationForm.size"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="paginationForm.total"
     >
     </el-pagination>
   </div>
 </template>
 
 <script>
-import {getHighquality, getPlaylist} from '@/network/playlist'
+import { mapMutations } from 'vuex'
 
 export default {
-  name: 'recommend',
+  name: 'Recommend',
   data() {
     return {
-      // 总条数
-      total: 0,
-      // 页码
-      page: 1,
+      paginationForm: {
+        // 总条数
+        total: 0,
+        // 页码
+        page: 0,
+        // 页容量
+        size: 10,
+      },
       // 顶部推荐歌单
-      toplist: {},
-      playlists: [],
-      tag: '全部'
-    };
-  },
-  // 侦听器
-  watch: {
-    // 监听 tag 变化
-    tag() {
-      this.page = 1
-      this.getHighquality()
-      this.getPlaylist()
+      topList: {},
+      // 歌单列表
+      list: [],
+      // 当前选中的栏目
+      selected: '全部',
     }
+  },
+  watch: {
+    // 监听 selected 变化
+    selected() {
+      // 获取新的顶部精品歌单
+      this.getTopList(1, this.selected)
+
+      // 获取新的歌单列表
+      this.getList(10, this.selected)
+    },
   },
   created() {
     // 获取顶部精品歌单
-    this.getHighquality()
+    this.getTopList(1, '全部')
+
     // 获取歌单列表
-    this.getPlaylist()
+    this.getList(10, '全部')
   },
   methods: {
+    ...mapMutations(['updateMusicUrl']),
+    // 当前页码发生变化触发
     handleCurrentChange(val) {
-      // console.log(`当前页: ${val}`);
-      this.page = val
-      this.getPlaylist()
+      this.paginationForm.page = val
+      this.getList(
+        this.paginationForm.size,
+        this.selected,
+        this.paginationForm.page
+      )
     },
-    getHighquality() {
-      const limit = 1
-      getHighquality(limit,this.tag).then(res => {
-        this.toplist = res.data.playlists[0]
+    // 页容量发生变化
+    handleSizeChange(val) {
+      this.paginationForm.size = val
+      this.getList(
+        this.paginationForm.size,
+        this.selected,
+        this.paginationForm.page
+      )
+      console.log('val: ', val)
+    },
+    // 获取顶部精品歌单
+    async getTopList(limit, cat) {
+      // 顶部 精品歌单
+      const { data: data } = await this.$axios.get(
+        '/top/playlist/highquality',
+        {
+          params: {
+            limit,
+            cat,
+          },
+        }
+      )
+      if (data.code == 200) {
+        this.topList = data.playlists[0]
+      }
+    },
+    // 获取歌单列表
+    async getList(limit, cat, offset = 0) {
+      const { data: data } = await this.$axios.get('/top/playlist/', {
+        params: {
+          limit,
+          offset,
+          cat,
+        },
       })
+      if (data.code == 200) {
+        this.paginationForm.total = data.total
+        this.list = data.playlists
+      }
     },
-    getPlaylist() {
-      const limit = 10
-      const offset = (this.page - 1) * 10
-      getPlaylist(limit,offset,this.tag).then(res => {
-        this.playlists = res.data.playlists
-        this.total = res.data.total
-      })
-    },
-    toPlaylist(id) {
+    // 去歌单详情页
+    toPlayListDetail(id) {
       this.$router.push(`/playlist?id=${id}`)
-    }
-  }
-};
+    },
+  },
+}
 </script>
 
-<style >
-
-</style>
+<style></style>
